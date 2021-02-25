@@ -1,4 +1,6 @@
+import notification from './notification'
 const apiKey = '20377131-0ebe9e49bfd56e929e88257a9';
+
 
 export default {
     searchQuery: '',
@@ -11,11 +13,16 @@ export default {
         const data = await res.json();
         console.log(data.hits);
          const mainData = data.hits;
+        //  console.log(mainData.length);
+         if (mainData.length === 0) {
+             notification.notify();
+         }
          this.page += 1;
          console.log(mainData);
          return mainData;
     } catch (error) {
-        return console.log(error);
+        // notification.notify();
+         console.log(error);
     }
     },
 

@@ -1,16 +1,15 @@
 import './styles.css';
-// import picturesTemplates from './templates/pictureTemplate.hbs';
 import _ from 'lodash';
 import pictureService from './components/fetchPictures';
 import refs from './components/refs';
 import createMarkup from './components/createMarkup'
 import * as basicLightbox from 'basiclightbox';
+import notification from './components/notification';
 
 
 refs.galleryRef.addEventListener('click', (event) => {
     if (event.target !== event.currentTarget) {
         pictureService.fetchPictures().then(mainData => {
-            // new Splide( '.splide' ).mount(12);
             console.log(event.target.src);
         const instance = basicLightbox.create(`
             <img src='${event.target.src}' width="800" height="600">
@@ -27,8 +26,12 @@ const debouncedInputCallback = _.debounce((event) => {
     if (pictureService.query !== '') {
         refs.galleryRef.innerHTML = '';
         pictureService.fetchPictures().then(mainData => {
-            createMarkup(mainData);
-            refs.loadMoreRef.classList.remove('is-hidden')
+            if (mainData.length === 0) {
+                notification.notify();
+            } else {
+                createMarkup(mainData);
+                refs.loadMoreRef.classList.remove('is-hidden')
+            }
         })
     } else {
         refs.galleryRef.innerHTML = ''

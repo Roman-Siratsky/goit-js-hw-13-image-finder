@@ -26,9 +26,10 @@ const debouncedInputCallback = _.debounce((event) => {
     if (pictureService.query !== '') {
         refs.galleryRef.innerHTML = '';
         pictureService.fetchPictures().then(mainData => {
-            if (mainData.length === 0) {
+            if (!mainData.length) {
                 notification.notify();
-            } else {
+                
+            } else if(mainData.length > 0) {
                 createMarkup(mainData);
                 refs.loadMoreRef.classList.remove('is-hidden')
             }
@@ -36,7 +37,8 @@ const debouncedInputCallback = _.debounce((event) => {
     } else {
         refs.galleryRef.innerHTML = ''
     }
-}, 400)
+    notification.isActive = false
+}, 800)
 
 // refs.loadMoreRef.addEventListener('click', loadMoreClick)
 
